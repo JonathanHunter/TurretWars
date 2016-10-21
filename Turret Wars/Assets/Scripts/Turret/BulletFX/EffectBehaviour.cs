@@ -11,7 +11,7 @@ public abstract class EffectBehaviour : MonoBehaviour
 
     public bool hasColor
     {
-        get { return color != null; }
+        get { return this.color != null; }
     }
 
     protected virtual void Start()
@@ -42,7 +42,17 @@ public abstract class EffectBehaviour : MonoBehaviour
 
     public void SetTargetColor(GameObject target)
     {
-        if (this.hasColor && target.GetComponentInChildren<Renderer>())
-            target.GetComponentInChildren<Renderer>().material.color = this.color;
+        if (this.hasColor)
+        {
+            Renderer[] renderers = target.GetComponentsInChildren<Renderer>();
+            if (renderers != null)
+            {
+                foreach(Renderer r in renderers)
+                    r.material.color = this.color;
+            }
+            if (target.GetComponent<TrailRenderer>() != null)
+                target.GetComponent<TrailRenderer>().material.SetColor("_TintColor", this.color);
+        }
+
     }
 }
