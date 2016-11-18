@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ObjectPool<T> where T : Poolable, new()
@@ -10,7 +11,7 @@ public class ObjectPool<T> where T : Poolable, new()
 
     public ObjectPool(GameObject dummyGameObject)
     {
-        PoolSize = 300;
+        PoolSize = 100;
         dummyGameObject.AddComponent<T>();
         pool = new T[PoolSize];
         for (int i = 0; i < PoolSize; i++)
@@ -29,4 +30,17 @@ public class ObjectPool<T> where T : Poolable, new()
         Debug.Log("No objects to pull from object pool.");
         return null;
     }
+
+    // Hackey thing made for menu use
+    public void SetImage(Sprite image)
+    {
+        foreach (T t in pool)
+        {
+            t.GetComponentInChildren<Image>().sprite = image;
+            Color[] colors = { Color.red, Color.green, Color.yellow };
+            t.GetComponentInChildren<Image>().color = colors[Random.Range(0, 3)];
+            t.GetComponentInChildren<Image>().rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 5);
+            t.GetComponentInChildren<Image>().rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 500);
+        }
+    } 
 }
